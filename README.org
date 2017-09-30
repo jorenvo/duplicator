@@ -1,0 +1,20 @@
+* Duplicator
+This script can be used to setup an easy to use full-disk backup solution for system disks with a FIFO backup rotation scheme.
+** Demo
+[[https://asciinema.org/a/k3myMsvjPZ7VDNZky9YHwoXre][file:https://asciinema.org/a/k3myMsvjPZ7VDNZky9YHwoXre.png]]
+** Introduction
+Taking system disk backups is a hassle because it requires booting up your device from another disk. This script attempts to make the process as simple as possible. In combination with a operating system installed on another disk all the user has to do is boot this operating system. This is the the only user input required. The system will then take care of ensuring there is enough space by deleting old backups and taking a new backup.
+** Example setup
+This example uses a Debian 8 (Jessie) system which will act as the /backup/ operating system. Important is that the system disk to be backed up is not mounted in the backup operating system. The backup operating system has a backup directory for the backup images.
+
+The backup operating system has the executable =duplicator.sh= script in =/root=. The =DISK_TO_DUPLICATE= variable in the script has been set to the system disk that has to be backed up. The =BACKUP_DIR= variable has been set to the directory that should contain the created backups.
+
+Automatically starting this script is handled through root's =.bashrc=. Note that the script will only run on tty1, so you can still log in as normal by using another tty. To automatically log in on tty1 and thus automatically run =duplicator.sh= =-a root= was added to the agetty service file in =/etc/systemd/system/getty.target.wants/=.
+
+Backups will appear in the backup directory as follows:
+
+#+BEGIN_EXAMPLE
+-rw-r--r-- 1 root root 118G Jul  1 09:40 backup_20170701_100446.img
+-rw-r--r-- 1 root root 118G Jul 13 01:35 backup_20170713_011139.img
+-rw-r--r-- 1 root root 118G Jul 22 02:23 backup_20170722_024750.img
+#+END_EXAMPLE
